@@ -1,10 +1,5 @@
 package dao;
 
-/**
- *
- * @author H Cem ERYILMAZ
- */
-
 import entity.Usta;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import util.DbConnection;
+
+/**
+ *
+ * @author H Cem ERYILMAZ
+ */
 
 public class UstaDAO {
 
