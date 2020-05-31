@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package dao;
 
 import entity.Parca;
@@ -13,12 +18,48 @@ import util.DbConnection;
  *
  * @author ahmet
  */
-
 public class ParcaDAO {
-
-    private DbConnection db;
+     private DbConnection db;
     private Connection c;
     private MakinaDAO makinaDao;
+
+    public List<Parca> getParcaList(int page,int pageSize) {
+        List<Parca> parcaDaoList = new ArrayList();
+          int start=(page-1)*pageSize;
+        try {
+            PreparedStatement pst = this.getC().prepareStatement("select * from parca  order by parca_id asc limit "+start+","+pageSize);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                Parca tmp = new Parca();
+                tmp.setParcaId(rs.getLong("parca_id"));
+                tmp.setParcaAd(rs.getString("parca_ad"));
+                tmp.setParcaHammadde(rs.getString("parca_hammadde"));
+                tmp.setParcaFiyat(rs.getLong("parca_fiyat"));
+                tmp.setMakina(this.getMakinaDao().makinaIdBul(rs.getLong("makina_id")));
+
+                parcaDaoList.add(tmp);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return parcaDaoList;
+    }
+    
+     public int count() {
+         int count =0;
+        try {
+            PreparedStatement pst = this.getC().prepareStatement("select count(parca_id) as parca_count from parca");
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+           count=rs.getInt("parca_count");
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return count;
+    }
 
     public List<Parca> getParcaList() {
         List<Parca> parcaDaoList = new ArrayList();
@@ -43,15 +84,15 @@ public class ParcaDAO {
         return parcaDaoList;
     }
 
-    public void insert(Parca parca, Long selectedParca) {
-
+    public void insert(Parca parca) {
+        System.out.println("insert metodu");
         try {
             PreparedStatement pst = this.getC().prepareStatement("insert into parca "
                     + "(parca_ad,parca_hammadde,parca_fiyat,makina_id) values(?,?,?,?)");
             pst.setString(1, parca.getParcaAd());
             pst.setString(2, parca.getParcaHammadde());
             pst.setLong(3, parca.getParcaFiyat());
-            pst.setLong(4, selectedParca);
+            pst.setLong(4, parca.getMakina().getMakinaId());
 
             pst.executeUpdate();
 
@@ -73,14 +114,14 @@ public class ParcaDAO {
 
     }
 
-    public void update(Parca parca, Long selectedParca) {
+    public void update(Parca parca) {
 
         try {
             PreparedStatement pst = this.getC().prepareStatement("update parca set parca_ad=? ,parca_hammadde=?, parca_fiyat=?, makina_id=?   where parca_id =?");
             pst.setString(1, parca.getParcaAd());
             pst.setString(2, parca.getParcaHammadde());
             pst.setLong(3, parca.getParcaFiyat());
-            pst.setLong(4, selectedParca);
+            pst.setLong(4, parca.getMakina().getMakinaId());
             pst.setLong(5, parca.getParcaId());
             pst.executeUpdate();
         } catch (SQLException ex) {
@@ -139,4 +180,5 @@ public class ParcaDAO {
         return makinaDao;
     }
 
+    
 }

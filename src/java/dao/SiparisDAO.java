@@ -1,5 +1,11 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package dao;
 
+import entity.Firma;
 import entity.Siparis;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,7 +20,6 @@ import util.DbConnection;
  *
  * @author ahmet
  */
-
 public class SiparisDAO {
 
     private DbConnection db;
@@ -23,6 +28,47 @@ public class SiparisDAO {
     private ParcaDAO parcaDao;
     private FirmaDAO firmaDao;
 
+     public List<Siparis> getSiparisList(int page,int pageSize) {
+        List<Siparis> siparisDaoList = new ArrayList();
+        int start=(page-1)*pageSize;
+        try {
+            PreparedStatement pst = this.getC().prepareStatement("select * from siparis order by siparis_id asc limit "+start+","+pageSize);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                Siparis tmp = new Siparis();
+                tmp.setSiparisId(rs.getLong("siparis_id"));
+                tmp.setSiparisKod(rs.getString("siparis_kod"));
+                tmp.setSiparisParcaSayi(rs.getLong("siparis_parcasayi"));
+                tmp.setParca(this.getParcaDao().parcaIdBul(rs.getLong("parca_id")));
+                tmp.setMuhasebeci(this.getMuhasebeciDao().muhasebeciIdBul(rs.getLong("muhasebeci_id")));
+                tmp.setSiparisVerenFirmalar(this.getFirmaDao().getSiparisVerenFirmalar(tmp.getSiparisId()));
+                siparisDaoList.add(tmp);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return siparisDaoList;
+    }
+
+    
+    
+    
+    
+    public int count() {
+         int count =0;
+        try {
+            PreparedStatement pst = this.getC().prepareStatement("select count(siparis_id) as siparis_count from siparis");
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+           count=rs.getInt("siparis_count");
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return count;
+    }
     public List<Siparis> getSiparisList() {
         List<Siparis> siparisDaoList = new ArrayList();
         try {
@@ -67,15 +113,15 @@ public class SiparisDAO {
         return siparis;
     }
 
-    public void insert(Siparis siparis, Long selectedMuhasebeci, Long selectedParca, List<String> selectedFirmalar) {
+    public void insert(Siparis siparis) {
 
         try {
             PreparedStatement pst = this.getC().prepareStatement("insert into siparis "
                     + "(siparis_kod,siparis_parcasayi,muhasebeci_id,parca_id) values(?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, siparis.getSiparisKod());
             pst.setLong(2, siparis.getSiparisParcaSayi());
-            pst.setLong(3, selectedMuhasebeci);
-            pst.setLong(4, selectedParca);
+            pst.setLong(3, siparis.getMuhasebeci().getMuhasebeciId());
+            pst.setLong(4, siparis.getParca().getParcaId());
             pst.executeUpdate();
             Long siparisId = null;
             ResultSet gk = pst.getGeneratedKeys();
@@ -83,11 +129,11 @@ public class SiparisDAO {
             if (gk.next()) {
                 siparisId = gk.getLong(1);
             }
-            for(String a : selectedFirmalar){
+            for(Firma a : siparis.getSiparisVerenFirmalar()){
                 PreparedStatement pst2 = this.getC().prepareStatement("insert into firma_siparis "
                     + "(siparis_id,firma_id) values(?,?)");
                 pst2.setLong(1, siparisId);
-                pst2.setLong(2, Long.parseLong(a));
+                pst2.setLong(2, a.getFirmaId());
                 pst2.executeUpdate();
             }
             
@@ -101,31 +147,38 @@ public class SiparisDAO {
     public void delete(Siparis siparis) {
 
         try {
+             PreparedStatement pst2 = this.getC().prepareStatement("delete from firma_siparis where siparis_id=?");
+            pst2.setLong(1, siparis.getSiparisId());
+            pst2.executeUpdate();
+            
             PreparedStatement pst = this.getC().prepareStatement("delete from siparis where siparis_id=?");
             pst.setLong(1, siparis.getSiparisId());
             pst.executeUpdate();
+            
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
 
     }
 
-    public void update(Siparis siparis, Long selectedMuhasebeci, Long selectedParca,List<String> selectedFirmalar) {
+    public void update(Siparis siparis) {
 
         try {
-            PreparedStatement pst = this.getC().prepareStatement("update siparis set siparis_kod=? ,siparis_parcasayi=?, muhasebeci_id=?, parca_id=?,   where siparis_id =?");
+            PreparedStatement pst = this.getC().prepareStatement("update siparis set siparis_kod=? ,siparis_parcasayi=?, muhasebeci_id=?, parca_id=?   where siparis_id =?");
             pst.setString(1, siparis.getSiparisKod());
             pst.setLong(2, siparis.getSiparisParcaSayi());
-            pst.setLong(3, selectedMuhasebeci);
-            pst.setLong(4, selectedParca);
+            pst.setLong(3, siparis.getMuhasebeci().getMuhasebeciId());
+            pst.setLong(4, siparis.getParca().getParcaId());
             pst.setLong(5, siparis.getSiparisId());
             pst.executeUpdate();
-            
-             for(String a : selectedFirmalar){
+            pst=this.getC().prepareStatement("delete from firma_siparis where siparis_id=?");
+            pst.setLong(1, siparis.getSiparisId());
+            pst.executeUpdate();
+             for(Firma a : siparis.getSiparisVerenFirmalar()){
                 PreparedStatement pst2 = this.getC().prepareStatement("insert into firma_siparis "
                     + "(siparis_id,firma_id) values(?,?)");
                 pst2.setLong(1, siparis.getSiparisId());
-                pst2.setLong(2, Long.parseLong(a));
+                pst2.setLong(2, a.getFirmaId());
                 pst2.executeUpdate();
             }
             
@@ -134,6 +187,21 @@ public class SiparisDAO {
         }
 
     }
+    
+    public  List<Siparis> getVerilenSiparisler(Long firmaId) {
+      List<Siparis> verilenSiparisler = new ArrayList<>();
+      try{
+          PreparedStatement pst = this.getC().prepareStatement("select * from firma_siparis where firma_id="+firmaId);
+            ResultSet rs =pst.executeQuery();
+            while(rs.next()){
+                verilenSiparisler.add(this.siparisIdBul(rs.getLong("siparis_id")));
+            }
+      }catch(SQLException ex){
+          System.out.println(ex.getMessage());
+      }
+      return verilenSiparisler;
+      }
+    
 
     public DbConnection getDb() {
         if (this.db == null) {

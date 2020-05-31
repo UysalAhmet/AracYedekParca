@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"      >
+
+
+    <h:form id="siparis-form">
+        <div class="form-group">
+                <h:inputHidden value="#{siparisController.siparis.siparisId}"/>
+                <h:outputText   value="Muhasebeci"/>
+                <h:selectOneMenu   styleClass="custom-select" id="selectedMuhasebeci" value="#{siparisController.siparis.muhasebeci}" converter="muhasebeciConverter">
+                    <f:selectItems value="#{siparisController.muhasebeciList}" var="muhasebeci" itemValue="#{muhasebeci}" itemLabel="#{muhasebeci.muhasebeciAd}   #{muhasebeci.muhasebeciSoyad}"/>
+                </h:selectOneMenu>
+
+                <h:outputText   value="Firmalar"/>
+                <h:selectManyCheckbox   value="#{siparisController.siparis.siparisVerenFirmalar}" styleClass="custom-select" converter="firmaConverter">
+                    <f:selectItems value="#{siparisController.firmaController.firmaControllerList}" var="firma" itemValue="#{firma}" itemLabel="#{firma.firmaAd}"/>
+
+                </h:selectManyCheckbox>
+
+
+                <h:outputText   value="Parca"/>
+                <h:selectOneMenu   styleClass="custom-select" id="selectedParca" value="#{siparisController.siparis.parca}" converter="parcaConverter">
+                    <f:selectItems value="#{siparisController.parcaList}" var="parca" itemValue="#{parca}" itemLabel="#{parca.parcaAd}   #{parca.parcaHammadde}"/>
+                </h:selectOneMenu>
+                <h:outputText   value="Siparis Kod"/>
+                <h:inputText   styleClass="form-control" value="#{siparisController.siparis.siparisKod}"/>
+                <h:outputText   value="Siparis Parca Sayı"/>
+                <h:inputText   styleClass="form-control" value="#{siparisController.siparis.siparisParcaSayi}"/>
+
+
+        </div>
+        <div class="form-group btn-group">
+                <h:commandButton rendered="#{siparisController.siparis.siparisId != null}" styleClass="btn btn-secondary" value="Update" action="#{siparisController.update}">
+                    <f:ajax execute="siparis-form" render="siparis-table siparis-form" />
+                </h:commandButton>
+                <h:commandButton rendered="#{siparisController.siparis.siparisId == null}"  styleClass="btn btn-primary" value="Create" action="#{siparisController.create}">
+                    <f:ajax execute="siparis-form" render="siparis-table siparis-form" />
+                </h:commandButton>
+                <h:commandButton rendered="#{siparisController.siparis.siparisId != null }"  styleClass="btn btn-light" value="Clear Form" action="#{siparisController.clearForm()}">
+                    <f:ajax execute="@this" render="siparis-form" />
+                </h:commandButton>
+     
+
+
+        </div>
+
+
+
+
+    </h:form>
+
+</ui:composition>
+
+
+
+
+
