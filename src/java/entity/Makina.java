@@ -1,11 +1,13 @@
 package entity;
 
+import java.util.Objects;
+
 /**
  *
  * @author yasemin
  */
-
 public class Makina {
+
     private Long makinaId;
     private String makinaMarka;
     private String makinaTur;
@@ -63,7 +65,29 @@ public class Makina {
         this.makinasorumlusu = makinasorumlusu;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 37 * hash + Objects.hashCode(this.makinaId);
+        return hash;
+    }
 
-    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Makina other = (Makina) obj;
+        if (!Objects.equals(this.makinaId, other.makinaId)) {
+            return false;
+        }
+        return true;
+    }
 
 }

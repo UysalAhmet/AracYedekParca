@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"      >
+
+   <h:form id="makina-table">
+                        
+                        <h:dataTable styleClass="table table-striped " width="1000" value="#{makinaController.makinaControllerList}" var="makina">
+                            <h:column>
+                                <f:facet name="header">Makina Id </f:facet>
+                                    #{makina.makinaId}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Marka</f:facet>
+                                <h:commandLink action="#{makinaController.updateForm(makina)}" value="#{makina.makinaMarka}">
+                                    <f:ajax execute="@this" render="makina-form" />
+                                </h:commandLink>
+
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Tur </f:facet>
+                                    #{makina.makinaTur}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">MakinaSorumlusu ad </f:facet>
+                                    #{makina.makinasorumlusu.makinasorumlusuAd}
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">MakinaSorumlusu Soyad </f:facet>
+                                    #{makina.makinasorumlusu.makinasorumlusuSoyad}
+                            </h:column>
+                             <h:column>
+                                <f:facet name="header">Isci Ad </f:facet>
+                                    #{makina.isci.isciAd}
+                            </h:column>
+                             <h:column>
+                                <f:facet name="header">Isci Soyad </f:facet>
+                                    #{makina.isci.isciSoyad}
+                            </h:column>
+                            
+                            
+                            <h:column>
+                                <f:facet name="header">Delete</f:facet>
+                                 <h:outputText rendered="#{loginController.log==false}" value="Yetkiniz Yok!"/>
+                                <h:commandButton rendered="#{loginController.log==true}" styleClass="btn btn-danger btn-sm"  action="#{makinaController.delete(makina)}" value="Delete">
+                                    <f:ajax execute="@this" render="makina-table makina-form"/>
+                                </h:commandButton>
+
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+</ui:composition>
+
