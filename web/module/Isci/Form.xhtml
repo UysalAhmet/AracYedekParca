@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"      >
+
+    <h:form id="isci-form">
+        <div class="form-group">
+                <h:inputHidden value="#{isciController.isci.isciId}"/>
+                <label for="selectedUsta">Usta</label>
+                <h:selectOneMenu styleClass="custom-select" id="selectedUsta" value="#{isciController.isci.usta}" converter="ustaConverter" >
+                    <f:selectItems value="#{isciController.ustaList}" var="usta" itemValue="#{usta}" itemLabel="#{usta.ustaAd}   #{usta.ustaSoyad}"/>
+                </h:selectOneMenu>
+                <label for="inputName">Ad </label>
+                <h:inputText styleClass="form-control" value="#{isciController.isci.isciAd}"/>
+                <label for="inputName">Soyad </label>
+                <h:inputText styleClass="form-control" value="#{isciController.isci.isciSoyad}"/>
+                <label for="inputName">Tc </label>
+                <h:inputText styleClass="form-control" value="#{isciController.isci.isciTc}"/>
+           
+
+
+        </div>
+        <div class="form-group btn-group">
+                <h:commandButton rendered="#{isciController.isci.isciId != null}" styleClass="btn btn-secondary" value="Update" action="#{isciController.update}">
+                    <f:ajax execute="isci-form" render="isci-table isci-form" />
+                </h:commandButton>
+                <h:commandButton rendered="#{isciController.isci.isciId == null}"  styleClass="btn btn-primary" value="Create" action="#{isciController.create}">
+                    <f:ajax execute="isci-form" render="isci-table isci-form" />
+                </h:commandButton>
+                <h:commandButton rendered="#{isciController.isci.isciId != null}"  styleClass="btn btn-light" value="Clear Form" action="#{isciController.clearForm()}">
+                    <f:ajax execute="@this" render="isci-form" />
+                </h:commandButton>
+         
+
+
+        </div>
+
+
+
+
+    </h:form>
+</ui:composition>
+
