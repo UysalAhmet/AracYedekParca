@@ -52,6 +52,29 @@ public class Usta {
     public void setUstaTc(String ustaTc) {
         this.ustaTc = ustaTc;
     }
-    
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.ustaId);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Usta other = (Usta) obj;
+        if (!Objects.equals(this.ustaId, other.ustaId)) {
+            return false;
+        }
+        return true;
+    }
 }

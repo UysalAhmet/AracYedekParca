@@ -6,7 +6,7 @@ package entity;
  */
 
 public class Isci {
-     private Long isciId;
+    private Long isciId;
     private String isciAd;
     private String isciSoyad;
     private String isciTc;
@@ -63,4 +63,28 @@ public class Isci {
         this.usta = usta;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 73 * hash + Objects.hashCode(this.isciId);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Isci other = (Isci) obj;
+        if (!Objects.equals(this.isciId, other.isciId)) {
+            return false;
+        }
+        return true;
+    }
 }

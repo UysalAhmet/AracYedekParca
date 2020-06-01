@@ -9,6 +9,7 @@ package controller;
  *
  * @author H Cem ERYILMAZ
  */
+
 import dao.IsciDAO;
 import dao.UstaDAO;
 import entity.Isci;
@@ -20,24 +21,67 @@ import javax.inject.Named;
 
 @Named
 @SessionScoped
-public class İsciController implements Serializable {
+public class IsciController implements Serializable{
      private List<Isci> isciControllerList;
     private IsciDAO iscidao;
     private Isci isci;
-    private Long selectedUsta;
     private UstaDAO ustaDao;
     private  List<Usta> ustaList;
+     private int page=1;
+    private int pageSize=5;
+    private int pageCount;
+
+    public void next(){
+        if(this.page==this.getPageCount()){
+            this.page=1;
+        } else {
+            this.page++;
+        }
+        
+    }
+    public void previous(){
+        if(this.page==1){
+            this.page=this.getPageCount();
+        } else {
+            this.page--;
+        }
+        
+              }
+    
+     public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getPageCount() {
+        this.pageCount=(int)Math.ceil(this.getIscidao().count()/(double)pageSize);
+        return pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
 
 
     
     public void updateForm(Isci isci){
         this.isci=isci;
-        this.selectedUsta=this.isci.getUsta().getUstaId();
         
     }
     
     public void update(){
-        this.getIscidao().update(this.isci,selectedUsta);
+        this.getIscidao().update(this.isci);
         this.isci= new Isci();
     }
     
@@ -54,13 +98,13 @@ public class İsciController implements Serializable {
     
     public void create(){
         
-        this.getIscidao().insert(this.isci,selectedUsta);
+        this.getIscidao().insert(this.isci);
         
         this.isci= new Isci();
     }
 
     public List<Isci> getIsciControllerList() {
-        this.isciControllerList=this.getIscidao().getIsciList();
+        this.isciControllerList=this.getIscidao().getIsciList(page,pageSize);
         return isciControllerList;
     }
 
@@ -88,13 +132,6 @@ public class İsciController implements Serializable {
         this.isci = isci;
     }
 
-    public Long getSelectedUsta() {
-        return selectedUsta;
-    }
-
-    public void setSelectedUsta(Long selectedUsta) {
-        this.selectedUsta = selectedUsta;
-    }
 
     public UstaDAO getUstaDao() {
         if(this.ustaDao==null){
@@ -112,6 +149,5 @@ public class İsciController implements Serializable {
         this.ustaList = ustaList;
     }
     
-    
-    
+  
 }

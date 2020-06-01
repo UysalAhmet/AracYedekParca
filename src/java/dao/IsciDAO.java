@@ -15,11 +15,48 @@ import util.DbConnection;
  */
 
 public class IsciDAO {
-    
+
     private DbConnection db;
     private Connection c;
     private UstaDAO ustaDao;
 
+    public List<Isci> getIsciList(int page,int pageSize) {
+        List<Isci> isciDaoList = new ArrayList();
+         int start=(page-1)*pageSize;
+        try {
+            PreparedStatement pst = this.getC().prepareStatement("select * from isci order by isci_id asc limit "+start+","+pageSize);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                Isci tmp = new Isci();
+                tmp.setIsciId(rs.getLong("isci_id"));
+                tmp.setIsciAd(rs.getString("isci_ad"));
+                tmp.setIsciSoyad(rs.getString("isci_soyad"));
+                tmp.setIsciTc(rs.getString("isci_tc"));
+                tmp.setUsta(this.getUstaDao().ustaIdBul(rs.getLong("usta_id")));
+
+                isciDaoList.add(tmp);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return isciDaoList;
+    }
+    public int count() {
+         int count =0;
+        try {
+            PreparedStatement pst = this.getC().prepareStatement("select count(isci_id) as isci_count from isci");
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+           count=rs.getInt("isci_count");
+            
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return count;
+    }
+    
     public List<Isci> getIsciList() {
         List<Isci> isciDaoList = new ArrayList();
         try {
@@ -43,7 +80,7 @@ public class IsciDAO {
         return isciDaoList;
     }
 
-    public void insert(Isci isci, Long selectedIsci) {
+    public void insert(Isci isci) {
 
         try {
             PreparedStatement pst = this.getC().prepareStatement("insert into isci "
@@ -51,7 +88,7 @@ public class IsciDAO {
             pst.setString(1, isci.getIsciAd());
             pst.setString(2, isci.getIsciSoyad());
             pst.setString(3, isci.getIsciTc());
-            pst.setLong(4, selectedIsci);
+            pst.setLong(4, isci.getUsta().getUstaId());
 
             pst.executeUpdate();
 
@@ -73,14 +110,14 @@ public class IsciDAO {
 
     }
 
-    public void update(Isci isci, Long selectedIsci) {
+    public void update(Isci isci) {
 
         try {
-            PreparedStatement pst = this.getC().prepareStatement("update isci set isci_ad=? ,isci_soyad=?, isci_tc=?, isci_id=?   where isci_id =?");
+            PreparedStatement pst = this.getC().prepareStatement("update isci set isci_ad=? ,isci_soyad=?, isci_tc=?, usta_id=?   where isci_id =?");
             pst.setString(1, isci.getIsciAd());
             pst.setString(2, isci.getIsciSoyad());
             pst.setString(3, isci.getIsciTc());
-            pst.setLong(4, selectedIsci);
+            pst.setLong(4, isci.getUsta().getUstaId());
             pst.setLong(5, isci.getIsciId());
             pst.executeUpdate();
         } catch (SQLException ex) {
