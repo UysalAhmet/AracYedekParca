@@ -15,140 +15,136 @@ import util.DbConnection;
  */
 
 public class UstaDAO {
-     private DbConnection db;
+
+    private DbConnection db;
     private Connection c;
 
-  public List<Usta> getUstaList() {
-         List<Usta> ustaDaoList = new ArrayList();
+    public List<Usta> getUstaList() {
+        List<Usta> ustaDaoList = new ArrayList();
         try {
             PreparedStatement pst = this.getC().prepareStatement("select * from usta ");
             ResultSet rs = pst.executeQuery();
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 Usta tmp = new Usta();
                 tmp.setUstaId(rs.getLong("usta_id"));
                 tmp.setUstaAd(rs.getString("usta_ad"));
                 tmp.setUstaSoyad(rs.getString("usta_soyad"));
                 tmp.setUstaTc(rs.getString("usta_tc"));
-               
-                
+
                 ustaDaoList.add(tmp);
             }
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return ustaDaoList;
     }
-    
-    public List<Usta> getUstaList(int page,int pageSize) {
-         List<Usta> ustaDaoList = new ArrayList();
-         int start=(page-1)*pageSize;
+
+    public List<Usta> getUstaList(int page, int pageSize) {
+        List<Usta> ustaDaoList = new ArrayList();
+        int start = (page - 1) * pageSize;
         try {
-            PreparedStatement pst = this.getC().prepareStatement("select * from usta order by usta_id asc limit "+start+","+pageSize);
+            PreparedStatement pst = this.getC().prepareStatement("select * from usta order by usta_id asc limit " + start + "," + pageSize);
             ResultSet rs = pst.executeQuery();
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 Usta tmp = new Usta();
                 tmp.setUstaId(rs.getLong("usta_id"));
                 tmp.setUstaAd(rs.getString("usta_ad"));
                 tmp.setUstaSoyad(rs.getString("usta_soyad"));
                 tmp.setUstaTc(rs.getString("usta_tc"));
-               
-                
+
                 ustaDaoList.add(tmp);
             }
-            
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return ustaDaoList;
     }
-    
+
     public int count() {
-         int count =0;
+        int count = 0;
         try {
             PreparedStatement pst = this.getC().prepareStatement("select count(usta_id) as usta_count from usta");
             ResultSet rs = pst.executeQuery();
             rs.next();
-           count=rs.getInt("usta_count");
-            
+            count = rs.getInt("usta_count");
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return count;
     }
 
-
     public void insert(Usta usta) {
-      
-    try{
+
+        try {
             PreparedStatement pst = this.getC().prepareStatement("insert into usta "
                     + "(usta_ad,usta_soyad,usta_tc) values(?,?,?)");
             pst.setString(1, usta.getUstaAd());
             pst.setString(2, usta.getUstaSoyad());
             pst.setString(3, usta.getUstaTc());
-            
+
             pst.executeUpdate();
-           
-        } catch(SQLException ex){
+
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-        
+
     }
 
     public void delete(Usta usta) {
-    
-         try{
+
+        try {
             PreparedStatement pst = this.getC().prepareStatement("delete from usta where usta_id=?");
             pst.setLong(1, usta.getUstaId());
             pst.executeUpdate();
-            } catch(SQLException ex){
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-    
+
     }
 
     public void update(Usta usta) {
-    
-         try{
+
+        try {
             PreparedStatement pst = this.getC().prepareStatement("update usta set usta_ad=? ,usta_soyad=?, usta_tc=?   where usta_id =?");
             pst.setString(1, usta.getUstaAd());
             pst.setString(2, usta.getUstaSoyad());
             pst.setString(3, usta.getUstaTc());
             pst.setLong(4, usta.getUstaId());
             pst.executeUpdate();
-            } catch(SQLException ex){
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-        
-    
+
     }
-    
-    
-    public Usta ustaIdBul(Long ustaId){
-        Usta usta=null;
-        
-        try{
-            
-            PreparedStatement pst = this.getC().prepareStatement("select * from usta where usta_id="+ustaId);
-            ResultSet rs =pst.executeQuery();
+
+    public Usta ustaIdBul(Long ustaId) {
+        Usta usta = null;
+
+        try {
+
+            PreparedStatement pst = this.getC().prepareStatement("select * from usta where usta_id=" + ustaId);
+            ResultSet rs = pst.executeQuery();
             rs.next();
-            usta=new Usta();
+            usta = new Usta();
             usta.setUstaId(rs.getLong("usta_id"));
             usta.setUstaAd(rs.getString("usta_ad"));
             usta.setUstaSoyad(rs.getString("usta_soyad"));
             usta.setUstaTc(rs.getString("usta_tc"));
-            
-        }catch(SQLException ex){
+
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return usta;
     }
-       
+
     public DbConnection getDb() {
-        if(this.db==null){
-            this.db=new DbConnection();
+        if (this.db == null) {
+            this.db = new DbConnection();
         }
         return db;
     }
@@ -158,8 +154,8 @@ public class UstaDAO {
     }
 
     public Connection getC() {
-        if(this.c==null){
-            this.c= getDb().connect();
+        if (this.c == null) {
+            this.c = getDb().connect();
         }
         return c;
     }
