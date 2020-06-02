@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"      >
+    <h:form id="muhasebeci-table">
+
+        <h:dataTable styleClass="table table-striped " width="1000" value="#{muhasebeciController.muhasebeciControllerList}" var="muhasebeci">
+            <h:column>
+                <f:facet name="header">Muhasebeci Id </f:facet>
+                    #{muhasebeci.muhasebeciId}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ad</f:facet>
+                <h:commandLink action="#{muhasebeciController.updateForm(muhasebeci)}" value="#{muhasebeci.muhasebeciAd}">
+                    <f:ajax execute="@this" render="muhasebeci-form" />
+                </h:commandLink>
+
+            </h:column>
+            <h:column>
+                <f:facet name="header">Soyad </f:facet>
+                    #{muhasebeci.muhasebeciSoyad}
+            </h:column>
+            <h:column>
+                <f:facet name="header">TC </f:facet>
+                    #{muhasebeci.muhasebeciTc}
+            </h:column>
+
+
+            <h:column>
+                <f:facet name="header">Delete</f:facet>
+                <h:outputText rendered="#{loginController.log==false}" value="Yetkiniz Yok!"/>
+                <h:commandButton rendered="#{loginController.log==true}" styleClass="btn btn-danger btn-sm"  action="#{muhasebeciController.delete(muhasebeci)}" value="Delete">
+                    <f:ajax execute="@this" render="muhasebeci-table muhasebeci-form"/>
+                </h:commandButton>
+
+            </h:column>
+        </h:dataTable>
+    </h:form>
+</ui:composition>
+
