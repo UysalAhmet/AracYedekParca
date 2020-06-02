@@ -1,19 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import dao.MuhasebeciDAO;
 import dao.ParcaDAO;
 import dao.SiparisDAO;
-import entity.Firma;
 import entity.Muhasebeci;
 import entity.Parca;
 import entity.Siparis;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -23,6 +16,7 @@ import javax.inject.Named;
  *
  * @author ahmet
  */
+
 @Named
 @SessionScoped
 public class SiparisController implements Serializable {
@@ -34,28 +28,29 @@ public class SiparisController implements Serializable {
     private List<Parca> parcaList;
     private MuhasebeciDAO muhasebeciDao;
     private List<Muhasebeci> muhasebeciList;
-       private int page=1;
-    private int pageSize=5;
+    private int page = 1;
+    private int pageSize = 5;
     private int pageCount;
 
-    public void next(){
-        if(this.page==this.getPageCount()){
-            this.page=1;
+    public void next() {
+        if (this.page == this.getPageCount()) {
+            this.page = 1;
         } else {
             this.page++;
         }
-        
+
     }
-    public void previous(){
-        if(this.page==1){
-            this.page=this.getPageCount();
+
+    public void previous() {
+        if (this.page == 1) {
+            this.page = this.getPageCount();
         } else {
             this.page--;
         }
-        
-              }
-    
-     public int getPage() {
+
+    }
+
+    public int getPage() {
         return page;
     }
 
@@ -72,18 +67,16 @@ public class SiparisController implements Serializable {
     }
 
     public int getPageCount() {
-        this.pageCount=(int)Math.ceil(this.getSiparisdao().count()/(double)pageSize);
+        this.pageCount = (int) Math.ceil(this.getSiparisdao().count() / (double) pageSize);
         return pageCount;
     }
 
     public void setPageCount(int pageCount) {
         this.pageCount = pageCount;
     }
-    
+
     @Inject
     private FirmaController firmaController;
-    
-    
 
     public void updateForm(Siparis siparis) {
         this.siparis = siparis;
@@ -111,7 +104,7 @@ public class SiparisController implements Serializable {
     }
 
     public List<Siparis> getSiparisControllerList() {
-        this.siparisControllerList = this.getSiparisdao().getSiparisList(page,pageSize);
+        this.siparisControllerList = this.getSiparisdao().getSiparisList(page, pageSize);
         return siparisControllerList;
     }
 
@@ -141,8 +134,6 @@ public class SiparisController implements Serializable {
         this.siparis = siparis;
     }
 
-   
-
     public ParcaDAO getParcaDao() {
         if (this.parcaDao == null) {
             this.parcaDao = new ParcaDAO();
@@ -166,8 +157,6 @@ public class SiparisController implements Serializable {
         return muhasebeciDao;
     }
 
-  
-
     public List<Muhasebeci> getMuhasebeciList() {
         this.muhasebeciList = this.getMuhasebeciDao().getMuhasebeciList();
         return muhasebeciList;
@@ -177,7 +166,6 @@ public class SiparisController implements Serializable {
         this.muhasebeciList = muhasebeciList;
     }
 
-   
     public FirmaController getFirmaController() {
         return firmaController;
     }
