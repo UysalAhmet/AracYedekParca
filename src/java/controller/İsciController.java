@@ -16,7 +16,7 @@ import javax.inject.Named;
 
 @Named
 @SessionScoped
-public class IsciController implements Serializable {
+public class İsciController implements Serializable {
 
     private List<Isci> isciControllerList;
     private IsciDAO iscidao;
