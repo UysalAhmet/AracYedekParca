@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.Objects;
+
 /**
  *
  * @author ahmet
@@ -87,4 +89,8 @@ public class Isci {
         }
         return true;
     }
+
+   
+    
+    
 }
