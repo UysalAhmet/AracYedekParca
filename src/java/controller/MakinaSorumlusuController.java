@@ -1,11 +1,5 @@
 package controller;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import dao.MakinaSorumlusuDAO;
 import entity.MakinaSorumlusu;
 import java.io.Serializable;
@@ -13,41 +7,41 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
-
-
 /**
  *
  * @author yasemin
  */
+
 @Named
 @SessionScoped
-public class MakinaSorumlusuController implements Serializable{
-    
+public class MakinaSorumlusuController implements Serializable {
+
     private List<MakinaSorumlusu> makinaSorumlusuControllerList;
     private MakinaSorumlusuDAO makinaSorumlusudao;
     private MakinaSorumlusu makinaSorumlusu;
-   private int page=1;
-    private int pageSize=5;
+    private int page = 1;
+    private int pageSize = 5;
     private int pageCount;
 
-    public void next(){
-        if(this.page==this.getPageCount()){
-            this.page=1;
+    public void next() {
+        if (this.page == this.getPageCount()) {
+            this.page = 1;
         } else {
             this.page++;
         }
-        
+
     }
-    public void previous(){
-        if(this.page==1){
-            this.page=this.getPageCount();
+
+    public void previous() {
+        if (this.page == 1) {
+            this.page = this.getPageCount();
         } else {
             this.page--;
         }
-        
-              }
-    
-     public int getPage() {
+
+    }
+
+    public int getPage() {
         return page;
     }
 
@@ -64,46 +58,42 @@ public class MakinaSorumlusuController implements Serializable{
     }
 
     public int getPageCount() {
-        this.pageCount=(int)Math.ceil(this.getMakinaSorumlusudao().count()/(double)pageSize);
+        this.pageCount = (int) Math.ceil(this.getMakinaSorumlusudao().count() / (double) pageSize);
         return pageCount;
     }
 
     public void setPageCount(int pageCount) {
         this.pageCount = pageCount;
     }
-    
 
-    
-    public void updateForm(MakinaSorumlusu makinaSorumlusu){
-        this.makinaSorumlusu=makinaSorumlusu;
-        
+    public void updateForm(MakinaSorumlusu makinaSorumlusu) {
+        this.makinaSorumlusu = makinaSorumlusu;
+
     }
-    
-    public void update(){
+
+    public void update() {
         this.getMakinaSorumlusudao().update(this.makinaSorumlusu);
-        this.makinaSorumlusu= new MakinaSorumlusu();
+        this.makinaSorumlusu = new MakinaSorumlusu();
     }
-    
-    
-    public void delete(MakinaSorumlusu makinaSorumlusu){
+
+    public void delete(MakinaSorumlusu makinaSorumlusu) {
         this.getMakinaSorumlusudao().delete(makinaSorumlusu);
-        this.makinaSorumlusu= new MakinaSorumlusu();
+        this.makinaSorumlusu = new MakinaSorumlusu();
     }
-    
-    
-    public void clearForm(){
-        this.makinaSorumlusu= new MakinaSorumlusu();
+
+    public void clearForm() {
+        this.makinaSorumlusu = new MakinaSorumlusu();
     }
-    
-    public void create(){
-        
+
+    public void create() {
+
         this.getMakinaSorumlusudao().insert(this.makinaSorumlusu);
-        
-        this.makinaSorumlusu= new MakinaSorumlusu();
+
+        this.makinaSorumlusu = new MakinaSorumlusu();
     }
 
     public List<MakinaSorumlusu> getMakinaSorumlusuControllerList() {
-        this.makinaSorumlusuControllerList=this.getMakinaSorumlusudao().getMakinaSorumlusuList(page,pageSize);
+        this.makinaSorumlusuControllerList = this.getMakinaSorumlusudao().getMakinaSorumlusuList(page, pageSize);
         return makinaSorumlusuControllerList;
     }
 
@@ -112,8 +102,9 @@ public class MakinaSorumlusuController implements Serializable{
     }
 
     public MakinaSorumlusuDAO getMakinaSorumlusudao() {
-        if(this.makinaSorumlusudao==null)
+        if (this.makinaSorumlusudao == null) {
             this.makinaSorumlusudao = new MakinaSorumlusuDAO();
+        }
         return makinaSorumlusudao;
     }
 
@@ -122,13 +113,14 @@ public class MakinaSorumlusuController implements Serializable{
     }
 
     public MakinaSorumlusu getMakinaSorumlusu() {
-        if(this.makinaSorumlusu==null)
+        if (this.makinaSorumlusu == null) {
             this.makinaSorumlusu = new MakinaSorumlusu();
+        }
         return makinaSorumlusu;
     }
 
     public void setMakinaSorumlusu(MakinaSorumlusu makinaSorumlusu) {
         this.makinaSorumlusu = makinaSorumlusu;
     }
-  
+
 }
