@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entity;
 
 import java.util.Objects;
@@ -11,7 +6,9 @@ import java.util.Objects;
  *
  * @author ahmet
  */
+
 public class Parca {
+
     private Long parcaId;
     private String parcaAd;
     private String parcaHammadde;
@@ -61,8 +58,6 @@ public class Parca {
         this.makina = makina;
     }
 
-   
-
     public Long getParcaFiyat() {
         return parcaFiyat;
     }
@@ -95,6 +90,5 @@ public class Parca {
         }
         return true;
     }
-    
-    
+
 }
