@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import dao.UserDAO;
@@ -16,34 +11,37 @@ import javax.inject.Named;
  *
  * @author ahmet
  */
+
 @Named
 @SessionScoped
-public class UserController implements Serializable{
-     private List<User> userControllerList;
+public class UserController implements Serializable {
+
+    private List<User> userControllerList;
     private UserDAO userdao;
     private User user;
-   private int page=1;
-    private int pageSize=5;
+    private int page = 1;
+    private int pageSize = 5;
     private int pageCount;
 
-    public void next(){
-        if(this.page==this.getPageCount()){
-            this.page=1;
+    public void next() {
+        if (this.page == this.getPageCount()) {
+            this.page = 1;
         } else {
             this.page++;
         }
-        
+
     }
-    public void previous(){
-        if(this.page==1){
-            this.page=this.getPageCount();
+
+    public void previous() {
+        if (this.page == 1) {
+            this.page = this.getPageCount();
         } else {
             this.page--;
         }
-        
-              }
-    
-     public int getPage() {
+
+    }
+
+    public int getPage() {
         return page;
     }
 
@@ -60,46 +58,42 @@ public class UserController implements Serializable{
     }
 
     public int getPageCount() {
-        this.pageCount=(int)Math.ceil(this.getUserdao().count()/(double)pageSize);
+        this.pageCount = (int) Math.ceil(this.getUserdao().count() / (double) pageSize);
         return pageCount;
     }
 
     public void setPageCount(int pageCount) {
         this.pageCount = pageCount;
     }
-    
 
-    
-    public void updateForm(User user){
-        this.user=user;
-        
+    public void updateForm(User user) {
+        this.user = user;
+
     }
-    
-    public void update(){
+
+    public void update() {
         this.getUserdao().update(this.user);
-        this.user= new User();
+        this.user = new User();
     }
-    
-    
-    public void delete(User user){
+
+    public void delete(User user) {
         this.getUserdao().delete(user);
-        this.user= new User();
+        this.user = new User();
     }
-    
-    
-    public void clearForm(){
-        this.user= new User();
+
+    public void clearForm() {
+        this.user = new User();
     }
-    
-    public void create(){
-        
+
+    public void create() {
+
         this.getUserdao().insert(this.user);
-        
-        this.user= new User();
+
+        this.user = new User();
     }
 
     public List<User> getUserControllerList() {
-        this.userControllerList=this.getUserdao().getUserList(page,pageSize);
+        this.userControllerList = this.getUserdao().getUserList(page, pageSize);
         return userControllerList;
     }
 
@@ -108,8 +102,9 @@ public class UserController implements Serializable{
     }
 
     public UserDAO getUserdao() {
-        if(this.userdao==null)
+        if (this.userdao == null) {
             this.userdao = new UserDAO();
+        }
         return userdao;
     }
 
@@ -118,14 +113,14 @@ public class UserController implements Serializable{
     }
 
     public User getUser() {
-        if(this.user==null)
+        if (this.user == null) {
             this.user = new User();
+        }
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
     }
-    
-    
+
 }
