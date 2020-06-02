@@ -1,14 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
-
-/**
- *
- * @author H Cem ERYILMAZ
- */
 
 import dao.UstaDAO;
 import entity.Usta;
@@ -17,34 +7,41 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+/**
+ *
+ * @author H Cem ERYILMAZ
+ */
+
 @Named
 @SessionScoped
 public class UstaController implements Serializable {
-     private List<Usta> ustaControllerList;
+
+    private List<Usta> ustaControllerList;
     private UstaDAO ustadao;
     private Usta usta;
-    private int page=1;
-    private int pageSize=5;
+    private int page = 1;
+    private int pageSize = 5;
     private int pageCount;
 
-    public void next(){
-        if(this.page==this.getPageCount()){
-            this.page=1;
+    public void next() {
+        if (this.page == this.getPageCount()) {
+            this.page = 1;
         } else {
             this.page++;
         }
-        
+
     }
-    public void previous(){
-        if(this.page==1){
-            this.page=this.getPageCount();
+
+    public void previous() {
+        if (this.page == 1) {
+            this.page = this.getPageCount();
         } else {
             this.page--;
         }
-        
-              }
-    
-     public int getPage() {
+
+    }
+
+    public int getPage() {
         return page;
     }
 
@@ -61,45 +58,42 @@ public class UstaController implements Serializable {
     }
 
     public int getPageCount() {
-        this.pageCount=(int)Math.ceil(this.getUstadao().count()/(double)pageSize);
+        this.pageCount = (int) Math.ceil(this.getUstadao().count() / (double) pageSize);
         return pageCount;
     }
 
     public void setPageCount(int pageCount) {
         this.pageCount = pageCount;
     }
-    
-    
-    public void updateForm(Usta usta){
-        this.usta=usta;
-        
+
+    public void updateForm(Usta usta) {
+        this.usta = usta;
+
     }
-    
-    public void update(){
+
+    public void update() {
         this.getUstadao().update(this.usta);
-        this.usta= new Usta();
+        this.usta = new Usta();
     }
-    
-    
-    public void delete(Usta usta){
+
+    public void delete(Usta usta) {
         this.getUstadao().delete(usta);
-        this.usta= new Usta();
+        this.usta = new Usta();
     }
-    
-    
-    public void clearForm(){
-        this.usta= new Usta();
+
+    public void clearForm() {
+        this.usta = new Usta();
     }
-    
-    public void create(){
-        
+
+    public void create() {
+
         this.getUstadao().insert(this.usta);
-        
-        this.usta= new Usta();
+
+        this.usta = new Usta();
     }
 
     public List<Usta> getUstaControllerList() {
-        this.ustaControllerList=this.getUstadao().getUstaList(page,pageSize);
+        this.ustaControllerList = this.getUstadao().getUstaList(page, pageSize);
         return ustaControllerList;
     }
 
@@ -108,8 +102,9 @@ public class UstaController implements Serializable {
     }
 
     public UstaDAO getUstadao() {
-        if(this.ustadao==null)
+        if (this.ustadao == null) {
             this.ustadao = new UstaDAO();
+        }
         return ustadao;
     }
 
@@ -118,13 +113,14 @@ public class UstaController implements Serializable {
     }
 
     public Usta getUsta() {
-        if(this.usta==null)
+        if (this.usta == null) {
             this.usta = new Usta();
+        }
         return usta;
     }
 
     public void setUsta(Usta usta) {
         this.usta = usta;
     }
-    
+
 }
