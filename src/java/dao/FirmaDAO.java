@@ -1,10 +1,12 @@
 package dao;
 
 import entity.Firma;
+import entity.Siparis;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import util.DbConnection;
@@ -18,6 +20,44 @@ public class FirmaDAO {
 
     private DbConnection db;
     private Connection c;
+    private SiparisDAO siparisDao;
+
+    public List<Firma> getFirmaList(int page, int pageSize) {
+        List<Firma> firmaDaoList = new ArrayList();
+        int start = (page - 1) * pageSize;
+        try {
+            PreparedStatement pst = this.getC().prepareStatement("select * from firma order by firma_id asc limit " + start + "," + pageSize);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                Firma tmp = new Firma();
+                tmp.setFirmaId(rs.getLong("firma_id"));
+                tmp.setFirmaAd(rs.getString("firma_ad"));
+                tmp.setFirmaAciklama(rs.getString("firma_aciklama"));
+                tmp.setVerilenSiparisler(this.getSiparisDao().getVerilenSiparisler(tmp.getFirmaId()));
+
+                firmaDaoList.add(tmp);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return firmaDaoList;
+    }
+
+    public int count() {
+        int count = 0;
+        try {
+            PreparedStatement pst = this.getC().prepareStatement("select count(firma_id) as firma_count from firma");
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            count = rs.getInt("firma_count");
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return count;
+    }
 
     public List<Firma> getFirmaList() {
         List<Firma> firmaDaoList = new ArrayList();
@@ -30,6 +70,7 @@ public class FirmaDAO {
                 tmp.setFirmaId(rs.getLong("firma_id"));
                 tmp.setFirmaAd(rs.getString("firma_ad"));
                 tmp.setFirmaAciklama(rs.getString("firma_aciklama"));
+                tmp.setVerilenSiparisler(this.getSiparisDao().getVerilenSiparisler(tmp.getFirmaId()));
 
                 firmaDaoList.add(tmp);
             }
@@ -44,12 +85,23 @@ public class FirmaDAO {
 
         try {
             PreparedStatement pst = this.getC().prepareStatement("insert into firma "
-                    + "(firma_ad,firma_aciklama) values(?,?)");
+                    + "(firma_ad,firma_aciklama) values(?,?)", Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, firma.getFirmaAd());
             pst.setString(2, firma.getFirmaAciklama());
-
             pst.executeUpdate();
+            Long firmaId = null;
+            ResultSet gk = pst.getGeneratedKeys();
 
+            if (gk.next()) {
+                firmaId = gk.getLong(1);
+            }
+            for (Siparis a : firma.getVerilenSiparisler()) {
+                PreparedStatement pst2 = this.getC().prepareStatement("insert into firma_siparis "
+                        + "(siparis_id,firma_id) values(?,?)");
+                pst2.setLong(1, a.getSiparisId());
+                pst2.setLong(2, firmaId);
+                pst2.executeUpdate();
+            }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -59,6 +111,10 @@ public class FirmaDAO {
     public void delete(Firma firma) {
 
         try {
+            PreparedStatement pst2 = this.getC().prepareStatement("delete from firma_siparis where firma_id=?");
+            pst2.setLong(1, firma.getFirmaId());
+            pst2.executeUpdate();
+
             PreparedStatement pst = this.getC().prepareStatement("delete from firma where firma_id=?");
             pst.setLong(1, firma.getFirmaId());
             pst.executeUpdate();
@@ -76,6 +132,17 @@ public class FirmaDAO {
             pst.setString(2, firma.getFirmaAciklama());
             pst.setLong(3, firma.getFirmaId());
             pst.executeUpdate();
+            pst = this.getC().prepareStatement("delete from firma_siparis where firma_id=?");
+            pst.setLong(1, firma.getFirmaId());
+            pst.executeUpdate();
+            for (Siparis a : firma.getVerilenSiparisler()) {
+                PreparedStatement pst2 = this.getC().prepareStatement("insert into firma_siparis "
+                        + "(siparis_id,firma_id) values(?,?)");
+                pst2.setLong(1, a.getSiparisId());
+                pst2.setLong(2, firma.getFirmaId());
+                pst2.executeUpdate();
+            }
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -135,6 +202,13 @@ public class FirmaDAO {
 
     public void setC(Connection c) {
         this.c = c;
+    }
+
+    public SiparisDAO getSiparisDao() {
+        if (this.siparisDao == null) {
+            this.siparisDao = new SiparisDAO();
+        }
+        return siparisDao;
     }
 
 }
