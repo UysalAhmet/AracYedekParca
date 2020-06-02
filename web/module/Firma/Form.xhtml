@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"      >
+
+    <h:form id="firma-form">
+        <div class="form-group">
+            <h:inputHidden value="#{firmaController.firma.firmaId}"/>
+
+            <label for="Firmalar">Siparisler</label>
+            <h:selectManyCheckbox value="#{firmaController.firma.verilenSiparisler}" styleClass="custom-select" converter="siparisConverter">
+                <f:selectItems value="#{firmaController.siparisController.siparisControllerList}" var="siparis" itemValue="#{siparis}" itemLabel="#{siparis.siparisKod}"/>
+
+            </h:selectManyCheckbox>
+
+            <label for="inputName">Ad </label>
+            <h:inputText styleClass="form-control" value="#{firmaController.firma.firmaAd}"/>
+            <label for="inputName">Aciklama </label>
+            <h:inputText styleClass="form-control" value="#{firmaController.firma.firmaAciklama}"/>
+
+
+        </div>
+        <div class="form-group btn-group">
+            <h:commandButton rendered="#{firmaController.firma.firmaId != null}" styleClass="btn btn-secondary" value="Update" action="#{firmaController.update}">
+                <f:ajax execute="firma-form" render="firma-table firma-form" />
+            </h:commandButton>
+            <h:commandButton rendered="#{firmaController.firma.firmaId == null}"  styleClass="btn btn-primary" value="Create" action="#{firmaController.create}">
+                <f:ajax execute="firma-form" render="firma-table firma-form" />
+            </h:commandButton>
+            <h:commandButton rendered="#{firmaController.firma.firmaId != null}"  styleClass="btn btn-light" value="Clear Form" action="#{firmaController.clearForm()}">
+                <f:ajax execute="@this" render="firma-form" />
+            </h:commandButton>
+
+
+        </div>
+
+
+
+
+    </h:form>
+</ui:composition>
+
