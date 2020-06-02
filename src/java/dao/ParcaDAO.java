@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import entity.Parca;
@@ -18,16 +13,18 @@ import util.DbConnection;
  *
  * @author ahmet
  */
+
 public class ParcaDAO {
-     private DbConnection db;
+
+    private DbConnection db;
     private Connection c;
     private MakinaDAO makinaDao;
 
-    public List<Parca> getParcaList(int page,int pageSize) {
+    public List<Parca> getParcaList(int page, int pageSize) {
         List<Parca> parcaDaoList = new ArrayList();
-          int start=(page-1)*pageSize;
+        int start = (page - 1) * pageSize;
         try {
-            PreparedStatement pst = this.getC().prepareStatement("select * from parca  order by parca_id asc limit "+start+","+pageSize);
+            PreparedStatement pst = this.getC().prepareStatement("select * from parca  order by parca_id asc limit " + start + "," + pageSize);
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
@@ -46,15 +43,15 @@ public class ParcaDAO {
         }
         return parcaDaoList;
     }
-    
-     public int count() {
-         int count =0;
+
+    public int count() {
+        int count = 0;
         try {
             PreparedStatement pst = this.getC().prepareStatement("select count(parca_id) as parca_count from parca");
             ResultSet rs = pst.executeQuery();
             rs.next();
-           count=rs.getInt("parca_count");
-            
+            count = rs.getInt("parca_count");
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -180,5 +177,4 @@ public class ParcaDAO {
         return makinaDao;
     }
 
-    
 }
