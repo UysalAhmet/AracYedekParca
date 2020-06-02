@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import dao.MakinaDAO;
@@ -18,36 +13,39 @@ import javax.inject.Named;
  *
  * @author ahmet
  */
+
 @Named
 @SessionScoped
-public class ParcaController implements Serializable{
-      private List<Parca> parcaControllerList;
+public class ParcaController implements Serializable {
+
+    private List<Parca> parcaControllerList;
     private ParcaDAO parcadao;
     private Parca parca;
     private MakinaDAO makinaDao;
-    private  List<Makina> makinaList;
-   private int page=1;
-    private int pageSize=5;
+    private List<Makina> makinaList;
+    private int page = 1;
+    private int pageSize = 5;
     private int pageCount;
 
-    public void next(){
-        if(this.page==this.getPageCount()){
-            this.page=1;
+    public void next() {
+        if (this.page == this.getPageCount()) {
+            this.page = 1;
         } else {
             this.page++;
         }
-        
+
     }
-    public void previous(){
-        if(this.page==1){
-            this.page=this.getPageCount();
+
+    public void previous() {
+        if (this.page == 1) {
+            this.page = this.getPageCount();
         } else {
             this.page--;
         }
-        
-              }
-    
-     public int getPage() {
+
+    }
+
+    public int getPage() {
         return page;
     }
 
@@ -64,46 +62,42 @@ public class ParcaController implements Serializable{
     }
 
     public int getPageCount() {
-        this.pageCount=(int)Math.ceil(this.getParcadao().count()/(double)pageSize);
+        this.pageCount = (int) Math.ceil(this.getParcadao().count() / (double) pageSize);
         return pageCount;
     }
 
     public void setPageCount(int pageCount) {
         this.pageCount = pageCount;
     }
-    
 
-    
-    public void updateForm(Parca parca){
-        this.parca=parca;
-        
+    public void updateForm(Parca parca) {
+        this.parca = parca;
+
     }
-    
-    public void update(){
+
+    public void update() {
         this.getParcadao().update(this.parca);
-        this.parca= new Parca();
+        this.parca = new Parca();
     }
-    
-    
-    public void delete(Parca parca){
+
+    public void delete(Parca parca) {
         this.getParcadao().delete(parca);
-        this.parca= new Parca();
+        this.parca = new Parca();
     }
-    
-    
-    public void clearForm(){
-        this.parca= new Parca();
+
+    public void clearForm() {
+        this.parca = new Parca();
     }
-    
-    public void create(){
+
+    public void create() {
         System.out.println("create metodu");
         this.getParcadao().insert(this.parca);
-        
-        this.parca= new Parca();
+
+        this.parca = new Parca();
     }
 
     public List<Parca> getParcaControllerList() {
-        this.parcaControllerList=this.getParcadao().getParcaList(page,pageSize);
+        this.parcaControllerList = this.getParcadao().getParcaList(page, pageSize);
         return parcaControllerList;
     }
 
@@ -112,8 +106,9 @@ public class ParcaController implements Serializable{
     }
 
     public ParcaDAO getParcadao() {
-        if(this.parcadao==null)
+        if (this.parcadao == null) {
             this.parcadao = new ParcaDAO();
+        }
         return parcadao;
     }
 
@@ -122,8 +117,9 @@ public class ParcaController implements Serializable{
     }
 
     public Parca getParca() {
-        if(this.parca==null)
+        if (this.parca == null) {
             this.parca = new Parca();
+        }
         return parca;
     }
 
@@ -131,21 +127,20 @@ public class ParcaController implements Serializable{
         this.parca = parca;
     }
 
-  
     public MakinaDAO getMakinaDao() {
-        if(this.makinaDao==null){
-            this.makinaDao= new MakinaDAO();
+        if (this.makinaDao == null) {
+            this.makinaDao = new MakinaDAO();
         }
         return makinaDao;
     }
 
     public List<Makina> getMakinaList() {
-        this.makinaList=this.getMakinaDao().getMakinaList();
+        this.makinaList = this.getMakinaDao().getMakinaList();
         return makinaList;
     }
 
     public void setMakinaList(List<Makina> makinaList) {
         this.makinaList = makinaList;
     }
-    
+
 }
