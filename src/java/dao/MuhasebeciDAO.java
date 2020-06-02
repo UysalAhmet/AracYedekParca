@@ -19,6 +19,43 @@ public class MuhasebeciDAO {
     private DbConnection db;
     private Connection c;
 
+    public List<Muhasebeci> getMuhasebeciList(int page, int pageSize) {
+        List<Muhasebeci> muhasebeciDaoList = new ArrayList();
+        int start = (page - 1) * pageSize;
+        try {
+            PreparedStatement pst = this.getC().prepareStatement("select * from muhasebeci order by muhasebeci_id asc limit " + start + "," + pageSize);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                Muhasebeci tmp = new Muhasebeci();
+                tmp.setMuhasebeciId(rs.getLong("muhasebeci_id"));
+                tmp.setMuhasebeciAd(rs.getString("muhasebeci_ad"));
+                tmp.setMuhasebeciSoyad(rs.getString("muhasebeci_soyad"));
+                tmp.setMuhasebeciTc(rs.getString("muhasebeci_tc"));
+
+                muhasebeciDaoList.add(tmp);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return muhasebeciDaoList;
+    }
+
+    public int count() {
+        int count = 0;
+        try {
+            PreparedStatement pst = this.getC().prepareStatement("select count(muhasebeci_id) as muhasebeci_count from muhasebeci");
+            ResultSet rs = pst.executeQuery();
+            rs.next();
+            count = rs.getInt("muhasebeci_count");
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return count;
+    }
+
     public List<Muhasebeci> getMuhasebeciList() {
         List<Muhasebeci> muhasebeciDaoList = new ArrayList();
         try {
