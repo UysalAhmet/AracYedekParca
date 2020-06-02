@@ -1,6 +1,8 @@
 package entity;
 
-/**
+import java.util.Objects;
+
+/** 
  *
  * @author ahmet
  */
@@ -77,4 +79,7 @@ public class Usta {
         }
         return true;
     }
+    
+    
+    
 }
